@@ -15,7 +15,6 @@
                 <a class="navbar-brand" href="{{ path('app_home') }}">Patrimoine Ronde</a>
                 <div class="ms-auto d-flex gap-2 align-items-center">
                     {% if app.user %}
-                        <a class="btn btn-sm btn-outline-light" href="{{ path('app_report_new') }}">Signalement</a>
                         <a class="btn btn-sm btn-light" href="{{ path('admin') }}">Admin</a>
                         <a class="btn btn-sm btn-outline-light" href="{{ path('app_logout') }}">Déconnexion</a>
                     {% else %}

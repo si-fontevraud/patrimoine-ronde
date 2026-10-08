@@ -1,0 +1,124 @@
+{% extends '@!EasyAdmin/layout.html.twig' %}
+
+{% block responsive_header %}
+    <style>
+        .responsive-header #responsive-header-logo {
+            flex: 1 1 auto;
+            min-width: 0;
+            text-align: center;
+        }
+        .responsive-header #responsive-header-logo .responsive-logo {
+            display: inline-block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .pr-admin-back-link-mobile {
+            align-items: center;
+            border: 0;
+            color: var(--user-name-color);
+            display: inline-flex;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-right: .4rem;
+            padding: 0;
+            text-decoration: none;
+        }
+        .pr-admin-back-link-mobile:hover {
+            color: var(--user-name-color);
+            text-decoration: none;
+        }
+        .pr-admin-back-link-mobile .pr-admin-back-label {
+            display: none;
+        }
+        .pr-admin-back-link-mobile .pr-admin-back-arrow {
+            display: inline-flex;
+            height: 20px;
+            width: 20px;
+        }
+        .pr-admin-back-link-mobile .pr-admin-back-arrow svg {
+            display: block;
+            fill: none;
+            height: 20px;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-width: 3.2;
+            width: 20px;
+        }
+        @media (min-width: 768px) {
+            .pr-admin-back-link-mobile {
+                gap: .35rem;
+            }
+            .pr-admin-back-link-mobile .pr-admin-back-label {
+                display: inline;
+                font-size: 13px;
+                font-weight: 500;
+            }
+        }
+    </style>
+
+    <twig:ea:Button type="button" isInvisible icon="internal:menu-bars" id="navigation-toggler" aria-label="Toggle navigation"></twig:ea:Button>
+
+    <div id="responsive-header-logo" class="text-truncate ms-auto">
+        {% block responsive_header_logo %}
+            <a class="responsive-logo" title="{{ ea.dashboardTitle|striptags }}" href="{{ path(ea.dashboardRouteName) }}">
+                {{ ea.dashboardTitle|raw }}
+            </a>
+        {% endblock responsive_header_logo %}
+    </div>
+
+    <a href="{{ path('app_home') }}" class="pr-admin-back-link-mobile" title="Retour au site">
+        <span aria-hidden="true" class="pr-admin-back-arrow">
+            <svg viewBox="0 0 24 24" role="img" focusable="false" aria-hidden="true">
+                <path d="M14.5 5.5L8 12l6.5 6.5" />
+            </svg>
+        </span>
+        <span class="pr-admin-back-label">Retour</span>
+    </a>
+
+    <twig:ea:ActionMenu class="user-menu-wrapper {{ is_granted(impersonator_permission) ? 'user-is-impersonated' }}">
+        <twig:ea:ActionMenu:Button class="user-details" data-bs-offset="0,5" withoutDropdownToggleMarker>
+            {% if ea.userMenu.avatarDisplayed %}
+                {{ user_menu_avatar }}
+            {% else %}
+                <twig:ea:Icon class="user-avatar" name="{{ ea.user is not null ? 'internal:user' : 'internal:user-xmark' }}" />
+            {% endif %}
+        </twig:ea:ActionMenu:Button>
+        <twig:ea:ActionMenu:Overlay>
+            {{ user_menu_dropdown }}
+        </twig:ea:ActionMenu:Overlay>
+    </twig:ea:ActionMenu>
+
+    {{ settings_dropdown }}
+{% endblock %}
+
+{% block header_custom_menu %}
+    <style>
+        .pr-admin-back-link {
+            align-items: center;
+            border: 1px solid var(--color-gray-300, #d0d7de);
+            border-radius: 6px;
+            color: inherit;
+            display: inline-flex;
+            font-size: 13px;
+            gap: 6px;
+            margin-right: 10px;
+            padding: 6px 10px;
+            text-decoration: none;
+        }
+        .pr-admin-back-link:hover {
+            background: var(--color-gray-100, #f3f4f6);
+            text-decoration: none;
+        }
+    </style>
+
+    <a href="{{ path('app_home') }}" class="pr-admin-back-link" title="Retour au site">
+        <span aria-hidden="true">←</span>
+        <span>Retour au site</span>
+    </a>
+
+    {{ parent() }}
+{% endblock %}

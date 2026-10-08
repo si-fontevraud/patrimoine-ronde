@@ -12,7 +12,6 @@
         <div class="d-flex gap-3 flex-wrap mb-4">
             {% if app.user %}
                 <a class="btn btn-primary" href="{{ path('app_report_new') }}">Nouvel incident</a>
-                <a class="btn btn-outline-secondary" href="{{ path('admin') }}">Administration</a>
             {% else %}
                 <a class="btn btn-primary" href="{{ path('app_login') }}">Se connecter</a>
             {% endif %}

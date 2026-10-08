@@ -40,5 +40,8 @@ final class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(PriorityThresholdCrudController::class, 'Seuils priorité', 'fa fa-sliders');
         yield MenuItem::section('Administration');
         yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fa fa-user');
+        yield MenuItem::section();
+        yield MenuItem::linkToRoute('Retour au site', 'fa fa-arrow-left', 'app_home');
+        yield MenuItem::linkToLogout('Déconnexion', 'fa fa-sign-out-alt');
     }
 }

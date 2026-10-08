@@ -3,37 +3,103 @@
 {% block page_title %}Tableau de bord{% endblock %}
 
 {% block content %}
-    <div class="alert alert-info mb-4">
-        Espace d’administration des rondes et incidents.
-    </div>
+    <style>
+        .pr-dashboard {
+            display: grid;
+            gap: 1rem;
+        }
+        .pr-dashboard-hero {
+            background: linear-gradient(135deg, #0d6efd 0%, #3b82f6 100%);
+            color: #fff;
+            border-radius: .75rem;
+            padding: 1.25rem 1.5rem;
+        }
+        .pr-dashboard-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        .pr-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: .75rem;
+            padding: 1rem 1.25rem;
+        }
+        .pr-card h2 {
+            margin: 0 0 .5rem;
+            font-size: 1.05rem;
+        }
+        .pr-card p {
+            color: #6b7280;
+            margin-bottom: .75rem;
+        }
+        .pr-links {
+            display: grid;
+            gap: .5rem;
+        }
+        .pr-links a {
+            text-decoration: none;
+        }
+        .pr-link-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #d1d5db;
+            border-radius: .5rem;
+            padding: .4rem .65rem;
+            font-size: .85rem;
+            color: #111827;
+            background: #fff;
+        }
+        .pr-link-btn:hover {
+            border-color: #9ca3af;
+            background: #f9fafb;
+        }
+        @media (min-width: 1024px) {
+            .pr-dashboard-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            .pr-card {
+                min-height: 230px;
+            }
+        }
+    </style>
 
-    <div class="row g-3">
-        <div class="col-lg-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h2 class="h5 mb-2">Référentiel</h2>
-                    <p class="text-muted">Zones, points de contrôle, équipements.</p>
-                    <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_zone_index') }}">Gérer les zones</a>
+    <div class="pr-dashboard">
+        <section class="pr-dashboard-hero">
+            <h1 class="h4 mb-1">Pilotage des rondes et incidents</h1>
+            <p class="mb-0">Accès rapide au référentiel, à l’exploitation terrain et à l’administration.</p>
+        </section>
+
+        <div class="pr-dashboard-grid">
+            <article class="pr-card">
+                <h2>Référentiel</h2>
+                <p>Configurer les éléments structurants du terrain.</p>
+                <div class="pr-links">
+                    <a class="pr-link-btn" href="{{ path('admin_zone_index') }}">Zones</a>
+                    <a class="pr-link-btn" href="{{ path('admin_control_point_index') }}">Points de contrôle</a>
+                    <a class="pr-link-btn" href="{{ path('admin_equipment_index') }}">Équipements</a>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h2 class="h5 mb-2">Exploitation</h2>
-                    <p class="text-muted">Rondes, résultats, incidents et priorisation.</p>
-                    <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_patrol_round_index') }}">Gérer les rondes</a>
+            </article>
+
+            <article class="pr-card">
+                <h2>Exploitation</h2>
+                <p>Suivre les rondes, les résultats et le traitement des incidents.</p>
+                <div class="pr-links">
+                    <a class="pr-link-btn" href="{{ path('admin_patrol_round_index') }}">Rondes</a>
+                    <a class="pr-link-btn" href="{{ path('admin_patrol_result_index') }}">Résultats</a>
+                    <a class="pr-link-btn" href="{{ path('admin_report_index') }}">Incidents</a>
+                    <a class="pr-link-btn" href="{{ path('admin_report_intervention_index') }}">Interventions</a>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h2 class="h5 mb-2">Administration</h2>
-                    <p class="text-muted">Comptes utilisateurs et paramètres.</p>
-                    <a class="btn btn-outline-primary btn-sm" href="{{ path('admin_user_index') }}">Gérer les utilisateurs</a>
+            </article>
+
+            <article class="pr-card">
+                <h2>Paramétrage</h2>
+                <p>Ajuster les règles de priorité et gérer les accès.</p>
+                <div class="pr-links">
+                    <a class="pr-link-btn" href="{{ path('admin_priority_threshold_index') }}">Seuils de priorité</a>
+                    <a class="pr-link-btn" href="{{ path('admin_user_index') }}">Utilisateurs</a>
                 </div>
-            </div>
+            </article>
         </div>
     </div>
 {% endblock %}

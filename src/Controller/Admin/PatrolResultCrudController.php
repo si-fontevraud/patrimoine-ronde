@@ -38,14 +38,15 @@ final class PatrolResultCrudController extends AbstractCrudController
             AssociationField::new('controlPoint'),
             AssociationField::new('equipment')->setRequired(false),
             AssociationField::new('report')->setRequired(false),
-            ChoiceField::new('result')->setChoices(array_combine(
-                array_map(static fn (PatrolCheckResult $result) => $result->value, PatrolCheckResult::cases()),
-                array_map(static fn (PatrolCheckResult $result) => $result->value, PatrolCheckResult::cases()),
-            )),
+            ChoiceField::new('result')->setChoices([
+                'OK' => PatrolCheckResult::OK,
+                'Observation' => PatrolCheckResult::OBSERVATION,
+                'Incident' => PatrolCheckResult::INCIDENT,
+                'Non contrôlé' => PatrolCheckResult::NOT_CHECKED,
+            ]),
             TextareaField::new('comment')->setRequired(false),
             TextField::new('photoPath')->setRequired(false),
             DateTimeField::new('checkedAt'),
         ];
     }
 }
-

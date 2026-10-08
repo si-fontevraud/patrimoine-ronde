@@ -10,11 +10,10 @@ use App\Entity\Zone;
 use App\Enum\ReportSource;
 use App\Enum\ReportStatus;
 use App\Entity\Report;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -42,18 +41,35 @@ final class ReportType extends AbstractType
                 'placeholder' => 'Aucun équipement',
             ])
             ->add('status', ChoiceType::class, [
-                'choices' => array_combine(array_map(static fn (ReportStatus $status) => $status->value, ReportStatus::cases()), array_map(static fn (ReportStatus $status) => $status->value, ReportStatus::cases())),
+                'choices' => [
+                    'Nouveau' => ReportStatus::NEW->value,
+                    'Qualifié' => ReportStatus::QUALIFIED->value,
+                    'Affecté' => ReportStatus::ASSIGNED->value,
+                    'En cours' => ReportStatus::IN_PROGRESS->value,
+                    'En attente' => ReportStatus::ON_HOLD->value,
+                    'Résolu' => ReportStatus::RESOLVED->value,
+                    'Clos' => ReportStatus::CLOSED->value,
+                ],
                 'label' => 'Statut',
                 'data' => ReportStatus::NEW->value,
             ])
             ->add('waitingReason', ChoiceType::class, [
-                'choices' => array_combine(array_map(static fn (IncidentWaitReason $reason) => $reason->value, IncidentWaitReason::cases()), array_map(static fn (IncidentWaitReason $reason) => $reason->value, IncidentWaitReason::cases())),
+                'choices' => [
+                    'En attente IT' => IncidentWaitReason::IT->value,
+                    'En attente technique' => IncidentWaitReason::TECHNICAL->value,
+                    'En attente prestataire' => IncidentWaitReason::VENDOR->value,
+                    'Autre attente' => IncidentWaitReason::OTHER->value,
+                ],
                 'required' => false,
                 'placeholder' => 'Aucun motif d’attente',
                 'label' => 'Motif d’attente',
             ])
             ->add('source', ChoiceType::class, [
-                'choices' => array_combine(array_map(static fn (ReportSource $source) => $source->value, ReportSource::cases()), array_map(static fn (ReportSource $source) => $source->value, ReportSource::cases())),
+                'choices' => [
+                    'Web' => ReportSource::WEB->value,
+                    'Mobile' => ReportSource::MOBILE->value,
+                    'Synchronisation' => ReportSource::SYNC->value,
+                ],
                 'label' => 'Source',
                 'data' => ReportSource::MOBILE->value,
             ])
@@ -73,12 +89,19 @@ final class ReportType extends AbstractType
                 'label' => 'Service pilote',
                 'required' => false,
             ])
-            ->add('supportServices', CollectionType::class, [
+            ->add('supportServices', ChoiceType::class, [
                 'label' => 'Services supports',
                 'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'entry_type' => TextType::class,
+                'multiple' => true,
+                'expanded' => true,
+                'choices' => [
+                    'Technique' => 'technique',
+                    'Informatique (IT)' => 'it',
+                    'Sécurité' => 'securite',
+                    'Accueil / Billetterie' => 'accueil',
+                    'Prestataire externe' => 'prestataire',
+                ],
+                'help' => 'Sélectionner un ou plusieurs services supports à solliciter.',
             ])
             ->add('dueAt', DateTimeType::class, [
                 'label' => 'Échéance',
@@ -97,6 +120,11 @@ final class ReportType extends AbstractType
                 'multiple' => true,
                 'mapped' => false,
                 'required' => false,
+                'attr' => [
+                    'accept' => 'image/*',
+                    'capture' => 'environment',
+                ],
+                'help' => 'Sur mobile, ouvre l’appareil photo (caméra arrière) selon le navigateur.',
             ]);
     }
 

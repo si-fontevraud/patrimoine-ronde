@@ -45,20 +45,29 @@ final class ReportCrudController extends AbstractCrudController
             AssociationField::new('assignedTo')->setRequired(false),
             TextField::new('title'),
             TextareaField::new('description'),
-            ChoiceField::new('priority')->setChoices(array_combine(
-                array_map(static fn (ReportPriority $priority) => $priority->value, ReportPriority::cases()),
-                array_map(static fn (ReportPriority $priority) => $priority->value, ReportPriority::cases())
-            )),
-            ChoiceField::new('status')->setChoices(array_combine(
-                array_map(static fn (ReportStatus $status) => $status->value, ReportStatus::cases()),
-                array_map(static fn (ReportStatus $status) => $status->value, ReportStatus::cases())
-            )),
+            ChoiceField::new('priority')->setChoices([
+                'Faible' => ReportPriority::LOW,
+                'Moyenne' => ReportPriority::MEDIUM,
+                'Haute' => ReportPriority::HIGH,
+                'Critique' => ReportPriority::CRITICAL,
+            ]),
+            ChoiceField::new('status')->setChoices([
+                'Nouveau' => ReportStatus::NEW,
+                'Qualifié' => ReportStatus::QUALIFIED,
+                'Affecté' => ReportStatus::ASSIGNED,
+                'En cours' => ReportStatus::IN_PROGRESS,
+                'En attente' => ReportStatus::ON_HOLD,
+                'Résolu' => ReportStatus::RESOLVED,
+                'Clos' => ReportStatus::CLOSED,
+            ]),
             ChoiceField::new('waitingReason')
                 ->setRequired(false)
-                ->setChoices(array_combine(
-                    array_map(static fn (IncidentWaitReason $reason) => $reason->value, IncidentWaitReason::cases()),
-                    array_map(static fn (IncidentWaitReason $reason) => $reason->value, IncidentWaitReason::cases())
-                )),
+                ->setChoices([
+                    'En attente IT' => IncidentWaitReason::IT->value,
+                    'En attente technique' => IncidentWaitReason::TECHNICAL->value,
+                    'En attente prestataire' => IncidentWaitReason::VENDOR->value,
+                    'Autre attente' => IncidentWaitReason::OTHER->value,
+                ]),
             IntegerField::new('impactScore'),
             IntegerField::new('urgencyScore'),
             IntegerField::new('aggravationScore'),

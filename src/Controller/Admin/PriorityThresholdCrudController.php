@@ -35,11 +35,12 @@ final class PriorityThresholdCrudController extends AbstractCrudController
             TextField::new('name'),
             IntegerField::new('minScore'),
             IntegerField::new('maxScore'),
-            ChoiceField::new('priority')->setChoices(array_combine(
-                array_map(static fn (ReportPriority $priority) => $priority->value, ReportPriority::cases()),
-                array_map(static fn (ReportPriority $priority) => $priority->value, ReportPriority::cases()),
-            )),
+            ChoiceField::new('priority')->setChoices([
+                'Faible' => ReportPriority::LOW,
+                'Moyenne' => ReportPriority::MEDIUM,
+                'Haute' => ReportPriority::HIGH,
+                'Critique' => ReportPriority::CRITICAL,
+            ]),
         ];
     }
 }
-

@@ -38,10 +38,12 @@ final class PatrolRoundCrudController extends AbstractCrudController
             TextField::new('reference')->setFormTypeOption('disabled', true),
             TextField::new('type'),
             AssociationField::new('agent'),
-            ChoiceField::new('status')->setChoices(array_combine(
-                array_map(static fn (PatrolRoundStatus $status) => $status->value, PatrolRoundStatus::cases()),
-                array_map(static fn (PatrolRoundStatus $status) => $status->value, PatrolRoundStatus::cases()),
-            )),
+            ChoiceField::new('status')->setChoices([
+                'Brouillon' => PatrolRoundStatus::DRAFT,
+                'Démarrée' => PatrolRoundStatus::STARTED,
+                'Terminée' => PatrolRoundStatus::COMPLETED,
+                'Annulée' => PatrolRoundStatus::CANCELLED,
+            ]),
             IntegerField::new('totalPoints'),
             DateTimeField::new('startedAt'),
             DateTimeField::new('finishedAt')->setRequired(false),
@@ -50,4 +52,3 @@ final class PatrolRoundCrudController extends AbstractCrudController
         ];
     }
 }
-
