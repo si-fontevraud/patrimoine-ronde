@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Signalements{% endblock %}
+
+{% block body %}
+    <main class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Signalements</h1>
+            <a class="btn btn-primary" href="{{ path('app_report_new') }}">Nouveau</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Référence</th>
+                    <th>Zone</th>
+                    <th>Priorité</th>
+                    <th>Statut</th>
+                    <th>Créé</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for report in reports %}
+                    <tr>
+                        <td>{{ report.reference }}</td>
+                        <td>{{ report.zone.name }}</td>
+                        <td>{{ report.priority.value }}</td>
+                        <td>{{ report.status.value }}</td>
+                        <td>{{ report.createdAt|date('d/m/Y H:i') }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+{% endblock %}

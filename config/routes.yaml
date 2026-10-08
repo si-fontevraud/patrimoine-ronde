@@ -8,4 +8,25 @@
 #   bin/console debug:router
 
 controllers:
-    resource: routing.controllers
+    resource: ../src/Controller
+    type: attribute
+
+app_home:
+    path: /
+    controller: App\Controller\HomeController::index
+
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+app_logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
+
+app_reports_index:
+    path: /reports
+    controller: App\Controller\ReportController::index
+
+app_report_new:
+    path: /report/new
+    controller: App\Controller\ReportController::new

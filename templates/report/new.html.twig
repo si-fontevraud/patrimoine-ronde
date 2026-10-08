@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau signalement{% endblock %}
+
+{% block body %}
+    <main class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h1 class="h3 mb-4">Nouveau signalement</h1>
+                        {{ form_start(form) }}
+                        <div class="row g-3">
+                            <div class="col-12">{{ form_row(form.title) }}</div>
+                            <div class="col-12">{{ form_row(form.description) }}</div>
+                            <div class="col-md-6">{{ form_row(form.zone) }}</div>
+                            <div class="col-md-6">{{ form_row(form.equipment) }}</div>
+                            <div class="col-md-4">{{ form_row(form.priority) }}</div>
+                            <div class="col-md-4">{{ form_row(form.status) }}</div>
+                            <div class="col-md-4">{{ form_row(form.source) }}</div>
+                            <div class="col-md-6">{{ form_row(form.observedAt) }}</div>
+                            <div class="col-md-6">{{ form_row(form.photos) }}</div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ path('app_home') }}" class="btn btn-outline-secondary">Retour</a>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
