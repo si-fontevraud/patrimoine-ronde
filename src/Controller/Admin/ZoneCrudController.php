@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 final class ZoneCrudController extends AbstractCrudController
@@ -33,6 +34,7 @@ final class ZoneCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm()->hideOnIndex(),
             TextField::new('code'),
             TextField::new('name'),
+            IntegerField::new('sortOrder'),
             TextField::new('description')->onlyOnForms(),
             BooleanField::new('isActive'),
             DateTimeField::new('createdAt')->hideOnForm(),

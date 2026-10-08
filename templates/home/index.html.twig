@@ -6,12 +6,12 @@
     <main class="container py-5">
         <section class="mb-4">
             <h1>Patrimoine Ronde</h1>
-            <p class="lead">Suivi des signalements terrain pour le site touristique.</p>
+            <p class="lead">Suivi des rondes et incidents terrain pour le site touristique.</p>
         </section>
 
         <div class="d-flex gap-3 flex-wrap mb-4">
             {% if app.user %}
-                <a class="btn btn-primary" href="{{ path('app_report_new') }}">Nouveau signalement</a>
+                <a class="btn btn-primary" href="{{ path('app_report_new') }}">Nouvel incident</a>
                 <a class="btn btn-outline-secondary" href="{{ path('admin') }}">Administration</a>
             {% else %}
                 <a class="btn btn-primary" href="{{ path('app_login') }}">Se connecter</a>
@@ -20,9 +20,9 @@
 
         <div class="card shadow-sm">
             <div class="card-body">
-                <h2 class="h4">Signalements ouverts</h2>
+                <h2 class="h4">Incidents ouverts</h2>
                 {% if reports is empty %}
-                    <p class="text-muted mb-0">Aucun signalement ouvert pour le moment.</p>
+                    <p class="text-muted mb-0">Aucun incident ouvert pour le moment.</p>
                 {% else %}
                     <div class="table-responsive">
                         <table class="table table-striped align-middle mb-0">
@@ -30,6 +30,7 @@
                             <tr>
                                 <th>Référence</th>
                                 <th>Zone</th>
+                                <th>Score</th>
                                 <th>Priorité</th>
                                 <th>Statut</th>
                                 <th>Créé le</th>
@@ -40,6 +41,7 @@
                                 <tr>
                                     <td>{{ report.reference }}</td>
                                     <td>{{ report.zone.name }}</td>
+                                    <td>{{ report.totalScore }}/15</td>
                                     <td><span class="badge text-bg-danger">{{ report.priority.value }}</span></td>
                                     <td>{{ report.status.value }}</td>
                                     <td>{{ report.createdAt|date('d/m/Y H:i') }}</td>

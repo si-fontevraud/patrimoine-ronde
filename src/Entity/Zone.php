@@ -31,6 +31,9 @@ class Zone
     #[ORM\Column(type: 'boolean')]
     private bool $isActive = true;
 
+    #[ORM\Column(type: 'integer')]
+    private int $sortOrder = 0;
+
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -43,6 +46,9 @@ class Zone
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Report::class, cascade: ['persist', 'remove'])]
     private Collection $reports;
 
+    #[ORM\OneToMany(mappedBy: 'zone', targetEntity: ControlPoint::class, cascade: ['persist', 'remove'])]
+    private Collection $controlPoints;
+
     public function __construct()
     {
         $this->id = new Ulid();
@@ -50,6 +56,7 @@ class Zone
         $this->updatedAt = $this->createdAt;
         $this->equipment = new ArrayCollection();
         $this->reports = new ArrayCollection();
+        $this->controlPoints = new ArrayCollection();
     }
 
     public function getId(): ?Ulid
@@ -110,6 +117,18 @@ class Zone
         return $this->createdAt;
     }
 
+    public function getSortOrder(): int
+    {
+        return $this->sortOrder;
+    }
+
+    public function setSortOrder(int $sortOrder): self
+    {
+        $this->sortOrder = $sortOrder;
+
+        return $this;
+    }
+
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
@@ -130,6 +149,11 @@ class Zone
     public function getReports(): Collection
     {
         return $this->reports;
+    }
+
+    public function getControlPoints(): Collection
+    {
+        return $this->controlPoints;
     }
 
     public function __toString(): string

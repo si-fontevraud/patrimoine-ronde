@@ -36,6 +36,12 @@ class Equipment
     #[ORM\Column(type: 'boolean')]
     private bool $isActive = true;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $externalUrl = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $lastSyncedAt = null;
+
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -129,6 +135,30 @@ class Equipment
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function getExternalUrl(): ?string
+    {
+        return $this->externalUrl;
+    }
+
+    public function setExternalUrl(?string $externalUrl): self
+    {
+        $this->externalUrl = $externalUrl !== null ? trim($externalUrl) : null;
+
+        return $this;
+    }
+
+    public function getLastSyncedAt(): ?\DateTimeImmutable
+    {
+        return $this->lastSyncedAt;
+    }
+
+    public function setLastSyncedAt(?\DateTimeImmutable $lastSyncedAt): self
+    {
+        $this->lastSyncedAt = $lastSyncedAt;
+
+        return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable

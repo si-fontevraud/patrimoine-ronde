@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouveau signalement{% endblock %}
+{% block title %}Nouvel incident{% endblock %}
 
 {% block body %}
     <main class="container py-5">
@@ -8,16 +8,22 @@
             <div class="col-lg-8">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h1 class="h3 mb-4">Nouveau signalement</h1>
+                        <h1 class="h3 mb-4">Nouvel incident</h1>
                         {{ form_start(form) }}
                         <div class="row g-3">
                             <div class="col-12">{{ form_row(form.title) }}</div>
                             <div class="col-12">{{ form_row(form.description) }}</div>
                             <div class="col-md-6">{{ form_row(form.zone) }}</div>
                             <div class="col-md-6">{{ form_row(form.equipment) }}</div>
-                            <div class="col-md-4">{{ form_row(form.priority) }}</div>
-                            <div class="col-md-4">{{ form_row(form.status) }}</div>
-                            <div class="col-md-4">{{ form_row(form.source) }}</div>
+                            <div class="col-md-4">{{ form_row(form.impactScore) }}</div>
+                            <div class="col-md-4">{{ form_row(form.urgencyScore) }}</div>
+                            <div class="col-md-4">{{ form_row(form.aggravationScore) }}</div>
+                            <div class="col-md-6">{{ form_row(form.status) }}</div>
+                            <div class="col-md-6">{{ form_row(form.waitingReason) }}</div>
+                            <div class="col-md-6">{{ form_row(form.source) }}</div>
+                            <div class="col-md-6">{{ form_row(form.servicePilot) }}</div>
+                            <div class="col-12">{{ form_row(form.supportServices) }}</div>
+                            <div class="col-md-6">{{ form_row(form.dueAt) }}</div>
                             <div class="col-md-6">{{ form_row(form.observedAt) }}</div>
                             <div class="col-md-6">{{ form_row(form.photos) }}</div>
                         </div>

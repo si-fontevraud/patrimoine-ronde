@@ -7,7 +7,10 @@ namespace App\Enum;
 enum ReportStatus: string
 {
     case NEW = 'new';
+    case QUALIFIED = 'qualified';
+    case ASSIGNED = 'assigned';
     case IN_PROGRESS = 'in_progress';
+    case ON_HOLD = 'on_hold';
     case RESOLVED = 'resolved';
     case CLOSED = 'closed';
 

@@ -7,11 +7,11 @@ namespace App\Controller;
 use App\Entity\Report;
 use App\Entity\ReportPhoto;
 use App\Entity\User;
-use App\Enum\ReportPriority;
 use App\Enum\ReportSource;
 use App\Enum\ReportStatus;
 use App\Form\ReportType;
 use App\Repository\ReportRepository;
+use App\Service\ReportScoringService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,12 @@ final class ReportController extends AbstractController
         ]);
     }
 
-    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function new(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        SluggerInterface $slugger,
+        ReportScoringService $reportScoringService,
+    ): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -45,9 +50,13 @@ final class ReportController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $report
                 ->setReference('SIG-'.strtoupper(substr((string) $report->getId(), 0, 8)))
-                ->setPriority(ReportPriority::from((string) $form->get('priority')->getData()))
                 ->setStatus(ReportStatus::from((string) $form->get('status')->getData()))
-                ->setSource(ReportSource::from((string) $form->get('source')->getData()));
+                ->setSource(ReportSource::from((string) $form->get('source')->getData()))
+                ->setImpactScore((int) $form->get('impactScore')->getData())
+                ->setUrgencyScore((int) $form->get('urgencyScore')->getData())
+                ->setAggravationScore((int) $form->get('aggravationScore')->getData());
+
+            $reportScoringService->applyPriorityFromScore($report);
 
             $files = $form->get('photos')->getData();
             if (is_iterable($files)) {
@@ -79,7 +88,7 @@ final class ReportController extends AbstractController
             $entityManager->persist($report);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Le signalement a bien été créé.');
+            $this->addFlash('success', 'L’incident a bien été créé.');
 
             return $this->redirectToRoute('app_reports_index');
         }

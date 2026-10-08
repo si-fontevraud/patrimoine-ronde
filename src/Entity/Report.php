@@ -43,6 +43,12 @@ class Report
     #[ORM\JoinColumn(nullable: true)]
     private ?User $assignedTo = null;
 
+    #[ORM\Column(length: 150, nullable: true)]
+    private ?string $servicePilot = null;
+
+    #[ORM\Column(type: 'json')]
+    private array $supportServices = [];
+
     #[ORM\Column(length: 150)]
     private ?string $title = null;
 
@@ -55,8 +61,23 @@ class Report
     #[ORM\Column(type: 'string', enumType: ReportStatus::class)]
     private ReportStatus $status = ReportStatus::NEW;
 
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $waitingReason = null;
+
     #[ORM\Column(type: 'string', enumType: ReportSource::class)]
     private ReportSource $source = ReportSource::WEB;
+
+    #[ORM\Column(type: 'smallint')]
+    private int $impactScore = 1;
+
+    #[ORM\Column(type: 'smallint')]
+    private int $urgencyScore = 1;
+
+    #[ORM\Column(type: 'smallint')]
+    private int $aggravationScore = 1;
+
+    #[ORM\Column(type: 'smallint')]
+    private int $totalScore = 3;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $observedAt = null;
@@ -72,6 +93,9 @@ class Report
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $closedAt = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $dueAt = null;
 
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: ReportPhoto::class, cascade: ['persist', 'remove'])]
     private Collection $photos;
@@ -151,6 +175,33 @@ class Report
         return $this;
     }
 
+    public function getServicePilot(): ?string
+    {
+        return $this->servicePilot;
+    }
+
+    public function setServicePilot(?string $servicePilot): self
+    {
+        $this->servicePilot = $servicePilot !== null ? trim($servicePilot) : null;
+
+        return $this;
+    }
+
+    public function getSupportServices(): array
+    {
+        return $this->supportServices;
+    }
+
+    public function setSupportServices(array $supportServices): self
+    {
+        $this->supportServices = array_values(array_unique(array_filter(array_map(
+            static fn (mixed $service): string => trim((string) $service),
+            $supportServices
+        ))));
+
+        return $this;
+    }
+
     public function getTitle(): ?string
     {
         return $this->title;
@@ -199,6 +250,18 @@ class Report
         return $this;
     }
 
+    public function getWaitingReason(): ?string
+    {
+        return $this->waitingReason;
+    }
+
+    public function setWaitingReason(?string $waitingReason): self
+    {
+        $this->waitingReason = $waitingReason !== null ? trim($waitingReason) : null;
+
+        return $this;
+    }
+
     public function getSource(): ReportSource
     {
         return $this->source;
@@ -209,6 +272,50 @@ class Report
         $this->source = $source;
 
         return $this;
+    }
+
+    public function getImpactScore(): int
+    {
+        return $this->impactScore;
+    }
+
+    public function setImpactScore(int $impactScore): self
+    {
+        $this->impactScore = $this->normalizeScore($impactScore);
+        $this->refreshTotalScore();
+
+        return $this;
+    }
+
+    public function getUrgencyScore(): int
+    {
+        return $this->urgencyScore;
+    }
+
+    public function setUrgencyScore(int $urgencyScore): self
+    {
+        $this->urgencyScore = $this->normalizeScore($urgencyScore);
+        $this->refreshTotalScore();
+
+        return $this;
+    }
+
+    public function getAggravationScore(): int
+    {
+        return $this->aggravationScore;
+    }
+
+    public function setAggravationScore(int $aggravationScore): self
+    {
+        $this->aggravationScore = $this->normalizeScore($aggravationScore);
+        $this->refreshTotalScore();
+
+        return $this;
+    }
+
+    public function getTotalScore(): int
+    {
+        return $this->totalScore;
     }
 
     public function getObservedAt(): ?\DateTimeImmutable
@@ -264,6 +371,18 @@ class Report
         return $this;
     }
 
+    public function getDueAt(): ?\DateTimeImmutable
+    {
+        return $this->dueAt;
+    }
+
+    public function setDueAt(?\DateTimeImmutable $dueAt): self
+    {
+        $this->dueAt = $dueAt;
+
+        return $this;
+    }
+
     public function getPhotos(): Collection
     {
         return $this->photos;
@@ -282,5 +401,15 @@ class Report
     public function __toString(): string
     {
         return sprintf('%s - %s', $this->reference ?? 'SIG', $this->title ?? '');
+    }
+
+    private function refreshTotalScore(): void
+    {
+        $this->totalScore = $this->impactScore + $this->urgencyScore + $this->aggravationScore;
+    }
+
+    private function normalizeScore(int $score): int
+    {
+        return max(1, min(5, $score));
     }
 }

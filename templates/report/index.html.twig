@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Signalements{% endblock %}
+{% block title %}Incidents{% endblock %}
 
 {% block body %}
     <main class="container py-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Signalements</h1>
+            <h1>Incidents</h1>
             <a class="btn btn-primary" href="{{ path('app_report_new') }}">Nouveau</a>
         </div>
 
@@ -15,6 +15,7 @@
                 <tr>
                     <th>Référence</th>
                     <th>Zone</th>
+                    <th>Score</th>
                     <th>Priorité</th>
                     <th>Statut</th>
                     <th>Créé</th>
@@ -25,6 +26,7 @@
                     <tr>
                         <td>{{ report.reference }}</td>
                         <td>{{ report.zone.name }}</td>
+                        <td>{{ report.totalScore }}/15</td>
                         <td>{{ report.priority.value }}</td>
                         <td>{{ report.status.value }}</td>
                         <td>{{ report.createdAt|date('d/m/Y H:i') }}</td>

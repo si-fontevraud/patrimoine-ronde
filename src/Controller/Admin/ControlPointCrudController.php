@@ -4,44 +4,48 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
-use App\Entity\Equipment;
+use App\Entity\ControlPoint;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 
-final class EquipmentCrudController extends AbstractCrudController
+final class ControlPointCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Equipment::class;
+        return ControlPoint::class;
     }
 
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Équipement')
-            ->setEntityLabelInPlural('Équipements')
-            ->setDefaultSort(['createdAt' => 'DESC']);
+            ->setEntityLabelInSingular('Point de contrôle')
+            ->setEntityLabelInPlural('Points de contrôle')
+            ->setDefaultSort(['sortOrder' => 'ASC']);
     }
 
     public function configureFields(string $pageName): iterable
     {
         return [
             IdField::new('id')->hideOnForm()->hideOnIndex(),
+            TextField::new('reference')->setFormTypeOption('disabled', true),
             AssociationField::new('zone'),
-            TextField::new('code'),
-            TextField::new('name'),
-            TextField::new('type'),
-            TextField::new('description')->onlyOnForms(),
-            TextField::new('externalUrl')->setRequired(false),
-            DateTimeField::new('lastSyncedAt')->setRequired(false),
+            AssociationField::new('equipment')->setRequired(false),
+            TextField::new('label'),
+            TextareaField::new('instruction')->setRequired(false),
+            TextField::new('frequency'),
+            IntegerField::new('sortOrder'),
+            IntegerField::new('defaultCriticality'),
             BooleanField::new('isActive'),
             DateTimeField::new('createdAt')->hideOnForm(),
             DateTimeField::new('updatedAt')->hideOnForm(),
         ];
     }
 }
+

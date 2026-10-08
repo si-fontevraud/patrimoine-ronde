@@ -19,8 +19,8 @@ class ReportRepository extends ServiceEntityRepository
     public function findOpenReports(): array
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.status != :closedStatus')
-            ->setParameter('closedStatus', ReportStatus::CLOSED)
+            ->andWhere('r.status NOT IN (:terminalStatuses)')
+            ->setParameter('terminalStatuses', [ReportStatus::RESOLVED, ReportStatus::CLOSED])
             ->orderBy('r.createdAt', 'DESC')
             ->getQuery()
             ->getResult();

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Entity\Equipment;
+use App\Enum\IncidentWaitReason;
 use App\Entity\Zone;
-use App\Enum\ReportPriority;
 use App\Enum\ReportSource;
 use App\Enum\ReportStatus;
 use App\Entity\Report;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -40,19 +41,50 @@ final class ReportType extends AbstractType
                 'required' => false,
                 'placeholder' => 'Aucun équipement',
             ])
-            ->add('priority', ChoiceType::class, [
-                'choices' => array_combine(array_map(static fn (ReportPriority $priority) => $priority->value, ReportPriority::cases()), array_map(static fn (ReportPriority $priority) => $priority->value, ReportPriority::cases())),
-                'label' => 'Priorité',
-            ])
             ->add('status', ChoiceType::class, [
                 'choices' => array_combine(array_map(static fn (ReportStatus $status) => $status->value, ReportStatus::cases()), array_map(static fn (ReportStatus $status) => $status->value, ReportStatus::cases())),
                 'label' => 'Statut',
                 'data' => ReportStatus::NEW->value,
             ])
+            ->add('waitingReason', ChoiceType::class, [
+                'choices' => array_combine(array_map(static fn (IncidentWaitReason $reason) => $reason->value, IncidentWaitReason::cases()), array_map(static fn (IncidentWaitReason $reason) => $reason->value, IncidentWaitReason::cases())),
+                'required' => false,
+                'placeholder' => 'Aucun motif d’attente',
+                'label' => 'Motif d’attente',
+            ])
             ->add('source', ChoiceType::class, [
                 'choices' => array_combine(array_map(static fn (ReportSource $source) => $source->value, ReportSource::cases()), array_map(static fn (ReportSource $source) => $source->value, ReportSource::cases())),
                 'label' => 'Source',
                 'data' => ReportSource::MOBILE->value,
+            ])
+            ->add('impactScore', ChoiceType::class, [
+                'label' => 'Impact visiteur',
+                'choices' => [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5],
+            ])
+            ->add('urgencyScore', ChoiceType::class, [
+                'label' => 'Urgence',
+                'choices' => [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5],
+            ])
+            ->add('aggravationScore', ChoiceType::class, [
+                'label' => 'Risque aggravation',
+                'choices' => [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5],
+            ])
+            ->add('servicePilot', TextType::class, [
+                'label' => 'Service pilote',
+                'required' => false,
+            ])
+            ->add('supportServices', CollectionType::class, [
+                'label' => 'Services supports',
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'entry_type' => TextType::class,
+            ])
+            ->add('dueAt', DateTimeType::class, [
+                'label' => 'Échéance',
+                'widget' => 'single_text',
+                'input' => 'datetime_immutable',
+                'required' => false,
             ])
             ->add('observedAt', DateTimeType::class, [
                 'label' => 'Date constatée',

@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Report;
+use App\Enum\IncidentWaitReason;
 use App\Enum\ReportPriority;
 use App\Enum\ReportStatus;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -26,8 +29,8 @@ final class ReportCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Signalement')
-            ->setEntityLabelInPlural('Signalements')
+            ->setEntityLabelInSingular('Incident')
+            ->setEntityLabelInPlural('Incidents')
             ->setDefaultSort(['createdAt' => 'DESC']);
     }
 
@@ -50,7 +53,20 @@ final class ReportCrudController extends AbstractCrudController
                 array_map(static fn (ReportStatus $status) => $status->value, ReportStatus::cases()),
                 array_map(static fn (ReportStatus $status) => $status->value, ReportStatus::cases())
             )),
+            ChoiceField::new('waitingReason')
+                ->setRequired(false)
+                ->setChoices(array_combine(
+                    array_map(static fn (IncidentWaitReason $reason) => $reason->value, IncidentWaitReason::cases()),
+                    array_map(static fn (IncidentWaitReason $reason) => $reason->value, IncidentWaitReason::cases())
+                )),
+            IntegerField::new('impactScore'),
+            IntegerField::new('urgencyScore'),
+            IntegerField::new('aggravationScore'),
+            IntegerField::new('totalScore')->hideOnForm(),
+            TextField::new('servicePilot')->setRequired(false),
+            ArrayField::new('supportServices')->setRequired(false),
             DateTimeField::new('observedAt'),
+            DateTimeField::new('dueAt')->setRequired(false),
             DateTimeField::new('createdAt')->hideOnForm(),
             DateTimeField::new('updatedAt')->hideOnForm(),
             DateTimeField::new('resolvedAt')->setRequired(false),
