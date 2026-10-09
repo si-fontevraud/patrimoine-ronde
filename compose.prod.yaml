@@ -1,3 +1,8 @@
+#
+# Production expects its environment to be provided explicitly (for example with
+# `docker compose --env-file .env.docker.prod -f compose.yaml -f compose.prod.yaml ...`).
+# Do not rely on `.env` defaults intended for local development.
+#
 services:
   app:
     build:

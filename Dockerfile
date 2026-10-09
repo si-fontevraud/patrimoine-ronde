@@ -47,6 +47,7 @@ RUN composer dump-autoload --no-dev --classmap-authoritative --optimize \
     && php bin/console importmap:install --env=prod --no-debug \
     && php bin/console cache:clear --env=prod --no-debug \
     && php bin/console asset-map:compile --env=prod --no-debug \
+    && rm -rf var/cache/* \
     && mkdir -p var/cache var/log var/share public/bundles/easyadmin \
     && chown -R www-data:www-data var public \
     && chmod -R 0775 var public
