@@ -14,6 +14,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -40,18 +41,19 @@ final class ReportType extends AbstractType
                 'required' => false,
                 'placeholder' => 'Aucun équipement',
             ])
-            ->add('status', ChoiceType::class, [
-                'choices' => [
-                    'Nouveau' => ReportStatus::NEW->value,
-                    'Qualifié' => ReportStatus::QUALIFIED->value,
-                    'Affecté' => ReportStatus::ASSIGNED->value,
-                    'En cours' => ReportStatus::IN_PROGRESS->value,
-                    'En attente' => ReportStatus::ON_HOLD->value,
-                    'Résolu' => ReportStatus::RESOLVED->value,
-                    'Clos' => ReportStatus::CLOSED->value,
-                ],
+            ->add('status', EnumType::class, [
+                'class' => ReportStatus::class,
+                'choice_label' => static fn (ReportStatus $status): string => match ($status) {
+                    ReportStatus::NEW => 'Nouveau',
+                    ReportStatus::QUALIFIED => 'Qualifié',
+                    ReportStatus::ASSIGNED => 'Affecté',
+                    ReportStatus::IN_PROGRESS => 'En cours',
+                    ReportStatus::ON_HOLD => 'En attente',
+                    ReportStatus::RESOLVED => 'Résolu',
+                    ReportStatus::CLOSED => 'Clos',
+                },
                 'label' => 'Statut',
-                'data' => ReportStatus::NEW->value,
+                'data' => ReportStatus::NEW,
             ])
             ->add('waitingReason', ChoiceType::class, [
                 'choices' => [
@@ -64,14 +66,15 @@ final class ReportType extends AbstractType
                 'placeholder' => 'Aucun motif d’attente',
                 'label' => 'Motif d’attente',
             ])
-            ->add('source', ChoiceType::class, [
-                'choices' => [
-                    'Web' => ReportSource::WEB->value,
-                    'Mobile' => ReportSource::MOBILE->value,
-                    'Synchronisation' => ReportSource::SYNC->value,
-                ],
+            ->add('source', EnumType::class, [
+                'class' => ReportSource::class,
+                'choice_label' => static fn (ReportSource $source): string => match ($source) {
+                    ReportSource::WEB => 'Web',
+                    ReportSource::MOBILE => 'Mobile',
+                    ReportSource::SYNC => 'Synchronisation',
+                },
                 'label' => 'Source',
-                'data' => ReportSource::MOBILE->value,
+                'data' => ReportSource::MOBILE,
             ])
             ->add('impactScore', ChoiceType::class, [
                 'label' => 'Impact visiteur',

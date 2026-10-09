@@ -7,8 +7,6 @@ namespace App\Controller;
 use App\Entity\Report;
 use App\Entity\ReportPhoto;
 use App\Entity\User;
-use App\Enum\ReportSource;
-use App\Enum\ReportStatus;
 use App\Form\ReportType;
 use App\Repository\ReportRepository;
 use App\Service\ReportScoringService;
@@ -49,8 +47,6 @@ final class ReportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $report
-                ->setStatus(ReportStatus::from((string) $form->get('status')->getData()))
-                ->setSource(ReportSource::from((string) $form->get('source')->getData()))
                 ->setImpactScore((int) $form->get('impactScore')->getData())
                 ->setUrgencyScore((int) $form->get('urgencyScore')->getData())
                 ->setAggravationScore((int) $form->get('aggravationScore')->getData());
