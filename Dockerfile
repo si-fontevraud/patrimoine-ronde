@@ -1,45 +1,61 @@
 # syntax=docker/dockerfile:1.7
 
-FROM php:8.4-fpm-bookworm AS app_base
+FROM php:8.4-fpm-bookworm AS base
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git unzip libicu-dev libpq-dev libzip-dev \
-    && docker-php-ext-install -j"$(nproc)" intl pdo_pgsql opcache \
+    && apt-get install -y --no-install-recommends \
+        git \
+        unzip \
+        libicu-dev \
+        libpq-dev \
+        libzip-dev \
+        zip \
+    && docker-php-ext-install -j"$(nproc)" \
+        intl \
+        pdo_pgsql \
+        opcache \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-FROM app_base AS app_prod
-
-ENV APP_ENV=prod \
-    APP_DEBUG=0 \
-    COMPOSER_ALLOW_SUPERUSER=1
+FROM base AS dependencies
 
 COPY composer.json composer.lock symfony.lock ./
 RUN composer install \
-    --no-dev \
     --no-interaction \
     --no-progress \
     --prefer-dist \
+    --no-scripts \
+    --no-plugins \
+    --no-dev \
     --optimize-autoloader \
-    --classmap-authoritative \
-    --no-scripts
+    --classmap-authoritative
 
+FROM base AS app_prod
+
+ENV APP_ENV=prod \
+    APP_DEBUG=0 \
+    COMPOSER_ALLOW_SUPERUSER=1 \
+    PHP_OPCACHE_VALIDATE_TIMESTAMPS=0
+
+COPY --from=dependencies /var/www/html/vendor ./vendor
 COPY . .
 
-RUN APP_SECRET=build-secret php bin/console asset-map:compile --env=prod --no-debug \
-    && rm -rf var/cache/* var/log/* \
+RUN composer dump-autoload --no-dev --classmap-authoritative --optimize \
+    && php bin/console cache:clear --env=prod --no-debug \
+    && php bin/console asset-map:compile --env=prod --no-debug \
     && mkdir -p var/cache var/log var/share \
-    && chown -R www-data:www-data var
+    && chown -R www-data:www-data var \
+    && chmod -R 0775 var
 
 COPY docker/php/entrypoint.sh /usr/local/bin/app-entrypoint
 RUN chmod +x /usr/local/bin/app-entrypoint
 
 USER www-data
 
-ENTRYPOINT ["app-entrypoint"]
+ENTRYPOINT ["/usr/local/bin/app-entrypoint"]
 CMD ["php-fpm"]
 
 FROM nginx:1.28-alpine AS nginx
