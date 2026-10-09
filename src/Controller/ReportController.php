@@ -49,7 +49,6 @@ final class ReportController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $report
-                ->setReference('SIG-'.strtoupper(substr((string) $report->getId(), 0, 8)))
                 ->setStatus(ReportStatus::from((string) $form->get('status')->getData()))
                 ->setSource(ReportSource::from((string) $form->get('source')->getData()))
                 ->setImpactScore((int) $form->get('impactScore')->getData())

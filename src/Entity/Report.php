@@ -106,7 +106,7 @@ class Report
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = $this->createdAt;
         $this->observedAt = $this->createdAt;
-        $this->reference = 'SIG-'.strtoupper(substr((string) $this->id, 0, 8));
+        $this->reference = 'SIG-'.(string) $this->id;
         $this->photos = new ArrayCollection();
     }
 
