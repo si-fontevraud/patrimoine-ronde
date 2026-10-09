@@ -252,6 +252,26 @@ docker compose --env-file .env.docker.prod -f compose.yaml -f compose.prod.yaml 
 
 > La commande passe par `sh -lc` pour utiliser les variables d'environnement déjà présentes dans le conteneur `database`.
 
+### Arrêter le site en production
+
+Arrêt complet de la stack :
+
+```bash
+docker compose --env-file .env.docker.prod -f compose.yaml -f compose.prod.yaml down
+```
+
+Arrêt du site web uniquement, sans couper PostgreSQL :
+
+```bash
+docker compose --env-file .env.docker.prod -f compose.yaml -f compose.prod.yaml stop nginx app messenger
+```
+
+Redémarrage de la stack :
+
+```bash
+docker compose --env-file .env.docker.prod -f compose.yaml -f compose.prod.yaml up -d
+```
+
 ## 10. Séquence recommandée
 
 ### Première installation
