@@ -12,7 +12,7 @@ services:
       DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
       MAILER_DSN: ${MAILER_DSN:-null://null}
       MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN:-doctrine://default?auto_setup=0}
-      DEFAULT_URI: ${DEFAULT_URI:-http://localhost}
+      DEFAULT_URI: ${DEFAULT_URI:-http://192.168.9.50:8081}
       APP_PREPARE_ON_STARTUP: ${APP_PREPARE_ON_STARTUP:-1}
       AUTO_MIGRATE: ${AUTO_MIGRATE:-0}
     depends_on:
@@ -44,7 +44,7 @@ services:
       DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
       MAILER_DSN: ${MAILER_DSN:-null://null}
       MESSENGER_TRANSPORT_DSN: ${MESSENGER_TRANSPORT_DSN:-doctrine://default?auto_setup=0}
-      DEFAULT_URI: ${DEFAULT_URI:-http://localhost}
+      DEFAULT_URI: ${DEFAULT_URI:-http://192.168.9.50:8081}
       APP_PREPARE_ON_STARTUP: 0
       AUTO_MIGRATE: 0
     depends_on:
