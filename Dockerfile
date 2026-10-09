@@ -43,6 +43,7 @@ COPY --from=dependencies /var/www/html/vendor ./vendor
 COPY . .
 
 RUN composer dump-autoload --no-dev --classmap-authoritative --optimize \
+    && php bin/console importmap:install --env=prod --no-debug \
     && php bin/console cache:clear --env=prod --no-debug \
     && php bin/console asset-map:compile --env=prod --no-debug \
     && mkdir -p var/cache var/log var/share \
