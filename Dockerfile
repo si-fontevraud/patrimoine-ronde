@@ -64,4 +64,5 @@ FROM nginx:1.28-alpine AS nginx
 WORKDIR /var/www/html
 
 COPY --from=app_prod /var/www/html/public ./public
+COPY --from=app_prod /var/www/html/vendor/easycorp/easyadmin-bundle/public ./public/bundles/easyadmin
 COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
