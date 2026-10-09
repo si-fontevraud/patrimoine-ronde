@@ -8,4 +8,6 @@ vendor
 node_modules
 .env.local
 .env.*.local
+.env.docker.prod
+config/secrets/*/*.decrypt.private.php
 compose.override.yaml
