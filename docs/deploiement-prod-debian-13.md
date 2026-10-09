@@ -67,6 +67,8 @@ cp .env.docker.prod.example .env.docker.prod
 
 Le fichier [`.env.docker.prod.example`](../.env.docker.prod.example) sert de modèle. Le fichier réel [`.env.docker.prod`](../.env.docker.prod) est ignoré par Git.
 
+> Le fichier [`.env`](../.env) reste versionné par le projet et sert uniquement de base de développement. Ne pas y stocker de secrets ni de réglages spécifiques au serveur de production.
+
 ### 3.2 Renseigner les variables obligatoires
 
 Éditer [`.env.docker.prod`](../.env.docker.prod) et adapter au serveur :
@@ -263,8 +265,25 @@ scripts/deploy-prod.sh install
 ### Mise à jour standard
 
 ```bash
-git status
+git fetch --all --prune
 scripts/deploy-prod.sh upgrade
+```
+
+### Si `git pull` est bloqué par `.env`
+
+Le cas le plus fréquent est une modification locale du fichier [`.env`](../.env) sur le serveur. Comme ce fichier est versionné, Git refuse de l'écraser.
+
+Si la configuration serveur est bien dans [`.env.docker.prod`](../.env.docker.prod), remettre [`.env`](../.env) à l'état du dépôt :
+
+```bash
+git restore .env
+git pull --ff-only origin main
+```
+
+Si tu veux inspecter avant restauration :
+
+```bash
+git --no-pager diff -- .env
 ```
 
 ### Retour arrière en cas de problème
